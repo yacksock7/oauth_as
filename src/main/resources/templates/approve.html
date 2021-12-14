@@ -1,0 +1,142 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Title</title>-->
+<!--    <link rel="shortcut icon" href="#">-->
+<!--    <script type="text/javascript" th:inline="javascript">-->
+<!--        function splitScopes(scope) {-->
+<!--            return scope.split(" ");-->
+<!--        }-->
+<!--    </script>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<div>-->
+<!--    <p th:text="${client.getClientId()}">It is Error</p>-->
+<!--    <p th:text="${client.getClientSecret()}">It is Error</p>-->
+<!--    <p th:text="${client.getRedirectUri()}">It is Error</p>-->
+<!--    <p th:text="${reqId}">It is Error</p>-->
+<!--&lt;!&ndash;    <table>&ndash;&gt;-->
+<!--        <h3>those scope will use by Client Application. you don't have a choice</h3>-->
+<!--&lt;!&ndash;        <tr th:each="elem : ${scope}">&ndash;&gt;-->
+
+<!--&lt;!&ndash;            <td th:text="${elem}">&ndash;&gt;-->
+<!--&lt;!&ndash;                <input type="checkbox" name="${elem}" id="${elem}" checked="checked"> <label th:text="${elem}"/>&ndash;&gt;-->
+<!--&lt;!&ndash;            </td>&ndash;&gt;-->
+<!--&lt;!&ndash;        </tr>&ndash;&gt;-->
+<!--    <script type="text/javascript" th:inline="javascript">-->
+
+<!--        var scope = [[${scope}]];-->
+<!--        console.log("scope1 : ", scope);-->
+<!--        scope = scope.split(" ");-->
+<!--        console.log("scope2 : ", scope);-->
+<!--        console.log("scope3 : ", [[${scope}]]);-->
+<!--    </script>-->
+<!--        <ul th:each="elem : ${scope}">-->
+<!--            <li><input type="checkbox" name="test" id="test" checked="checked"><label th:text="${elem}"/></li>-->
+<!--        </ul>-->
+<!--&lt;!&ndash;    </table>&ndash;&gt;-->
+<!--&lt;!&ndash;    <form action="/api/v1/authorization/approve" method="post">&ndash;&gt;-->
+<!--    <form action="/approve" method="post">-->
+<!--        <input type="hidden" name="reqId" th:value="${reqId}">-->
+<!--        <input type="hidden" name="scope" th:value="${scope}">-->
+<!--        <input type="submit" name="approve" value="Approve">-->
+<!--    </form>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->
+
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>OAuth in Action: OAuth Authorization Server</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <style>
+        body {
+            padding-top: 60px;
+        }
+        .navbar-inverse {
+            background-color: #322;
+        }
+    </style>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<!--<body onload="onInit()">-->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">OAuth in Action: <span class="label label-danger">OAuth Authorization Server</span></a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+
+    <div class="jumbotron">
+        <h2>Approve this client?</h2>
+        <br/>
+        <p><b>Client Id : </b> <label th:text="${client.getClientId()}"/></p>
+        <p><b>Client Secret : </b> <label th:text="${client.getClientSecret()}"/></p>
+        <p><b>Redirect Uri : </b> <label th:text="${client.getRedirectUri()}"/></p>
+        <p><b>reqId : </b> <label th:text="${reqId}"/></p>
+        <p><b>scope : </b> <label th:text="${scope}"/></p>
+        <script language="JavaScript">
+            function toggle(e) {
+                let scopes = document.getElementsByName('scope')[0].value;
+                console.log("before scopes : ", scopes);
+                scopes = scopes.split(" ");
+                const idx = scopes.findIndex(e2 => e2 === e.value);
+                if (idx === -1) {
+                    scopes.push(e.value);
+                } else {
+                    scopes.splice(idx, 1);
+                }
+                scopes = scopes.join(" ");
+                document.getElementsByName('scope')[0].value = scopes;
+                console.log("after scopes : ", scopes);
+            }
+        </script>
+        <p>The client is requesting access to the following:</p>
+        <ul name="ulTest" th:each="elem : ${scopeList}">
+            <li><input type="checkbox" th:value="${elem}" checked="checked" onClick="toggle(this)" > <label th:text="${elem}"/></li>
+        </ul>
+
+<!--        <form action="/approve" method="post">-->
+<!--            <input type="hidden" name="scope"  th:value="${scope}">-->
+<!--            <input type="hidden" name="reqid"  th:value="${reqId}">-->
+<!--            <input type="submit" class="btn btn-success" name="approve" value="Approve">-->
+<!--            <input type="submit" class="btn btn-danger" name="deny" value="Deny">-->
+<!--        </form>-->
+
+            <form action="/approve" method="post">
+                <input type="hidden" name="scope" th:value="${scope}">
+                <input type="hidden" name="reqId" th:value="${reqId}">
+                <input type="submit" class="btn btn-success" name="approve" value="Approve">
+            </form>
+            </div>
+
+        </div><!-- /.container -->
+
+
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</body>
+</html>

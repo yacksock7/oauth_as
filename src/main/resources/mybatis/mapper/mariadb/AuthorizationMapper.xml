@@ -1,0 +1,110 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="onthelive.oauth.as.repository.mapper.AuthorizationMapper">
+    <resultMap id="ClientResultMap" type="Client">
+        <id property="id"                       column="id" />
+        <result property="clientId"             column="client_id" />
+        <result property="clientSecret"         column="client_secret" />
+        <result property="redirectUri"          column="redirect_uri" />
+        <result property="scopes"               column="scopes" />
+        <result property="createdDatetime"      column="created_datetime" />
+        <result property="updatedDatetime"      column="updated_datetime" />
+    </resultMap>
+
+    <resultMap id="RequestResultMap" type="Request">
+        <id property="requestId"                column="request_id" />
+        <result property="responseType"         column="response_type" />
+        <result property="redirectUri"          column="redirect_uri" />
+        <result property="state"                column="state" />
+        <result property="clientId"             column="client_id" />
+        <result property="createdDatetime"      column="created_datetime" />
+        <result property="updatedDatetime"      column="updated_datetime" />
+    </resultMap>
+
+    <resultMap id="CodeResultMap" type="Code">
+        <id property="codeId"                   column="code_id" />
+        <result property="requestId"            column="request_id"/>
+        <result property="responseType"         column="response_type"/>
+        <result property="redirectUri"          column="redirect_uri" />
+        <result property="state"                column="state" />
+        <result property="clientId"             column="client_id" />
+        <result property="scopes"               column="scopes" />
+        <result property="createdDatetime"      column="created_datetime" />
+        <result property="updatedDatetime"      column="updated_datetime" />
+    </resultMap>
+
+    <select id="selectClient" parameterType="String" resultMap="ClientResultMap">
+        SELECT id,
+               client_id,
+               client_secret,
+               redirect_uri,
+               scopes,
+               created_datetime,
+               updated_datetime
+        FROM clients
+        WHERE client_id = #{value}
+    </select>
+
+    <insert id="insertRequest" parameterType="Request">
+        INSERT INTO requests (
+            request_id,
+            response_type,
+            redirect_uri,
+            state,
+            client_id
+        ) VALUES (
+            #{requestId},
+            #{responseType},
+            #{redirectUri},
+            #{state},
+            #{clientId}
+        )
+    </insert>
+
+    <select id="selectRequest" parameterType="String" resultMap="RequestResultMap">
+        SELECT request_id,
+               response_type,
+               redirect_uri,
+               state,
+               client_id,
+               created_datetime,
+               updated_datetime
+        FROM requests
+        WHERE request_id = #{requestId}
+    </select>
+
+    <delete id="deleteRequest" parameterType="String">
+        DELETE FROM requests
+        WHERE request_id=#{requestId}
+    </delete>
+
+    <insert id="insertCode" parameterType="Code">
+        INSERT INTO codes (
+            code_id,
+            request_id,
+            response_type,
+            redirect_uri,
+            state,
+            client_id,
+            scopes
+        ) VALUES (
+            #{codeId},
+            #{requestId},
+            #{responseType},
+            #{redirectUri},
+            #{state},
+            #{clientId},
+            #{scopes}
+        )
+    </insert>
+
+    <select id="selectCode" parameterType="String" resultMap="CodeResultMap">
+        SELECT *
+        FROM codes
+        WHERE code_id = #{codeId}
+    </select>
+
+    <delete id="deleteCode" parameterType="String">
+        DELETE FROM codes
+        WHERE code_id = #{codeId}
+    </delete>
+</mapper>

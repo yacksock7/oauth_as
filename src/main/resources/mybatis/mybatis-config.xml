@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="cacheEnabled"     value="true"/>
+        <setting name="useGeneratedKeys" value="true"/>
+        <setting name="defaultExecutorType" value="REUSE"/>
+    </settings>
+
+    <typeAliases>
+        <typeAlias type="onthelive.oauth.as.model.Client" alias="Client" />
+        <typeAlias type="onthelive.oauth.as.model.Request" alias="Request" />
+        <typeAlias type="onthelive.oauth.as.model.Code" alias="Code" />
+        <typeAlias type="onthelive.oauth.as.model.Token" alias="Token" />
+    </typeAliases>
+
+    <typeHandlers>
+        <typeHandler handler="onthelive.oauth.as.repository.typehandler.BooleanYnTypeHandler" javaType="Boolean" />
+    </typeHandlers>
+
+    <mappers>
+        <mapper resource="mybatis/mapper/mariadb/AuthorizationMapper.xml" />
+        <mapper resource="mybatis/mapper/mariadb/TokenMapper.xml" />
+    </mappers>
+</configuration>
